@@ -109,36 +109,62 @@
     </div>
     
     <script>
-        document.addEventListener("DOMContentLoaded", function() {
-            const orders = JSON.parse(localStorage.getItem("allOrders")) || [];
-            const myOrdersContainer = document.getElementById("myOrders");
-            
-            if (orders.length === 0) {
-                myOrdersContainer.innerHTML = "<p>No orders found.</p>";
-                return;
-            }
-            
-            orders.forEach(order => {
-                const orderDiv = document.createElement("div");
-                orderDiv.className = "order";
-                orderDiv.innerHTML = `
-                    <h3>Order #${order.id}</h3>
-                    <p><strong>Customer:</strong> ${order.customerName} (${order.customerEmail})</p>
-                    <p><strong>Total:</strong> ₵${order.total.toFixed(2)}</p>
-                    <p><strong>Status:</strong> <span class="status ${order.status.toLowerCase()}">${order.status}</span></p>
-                    <div class="order-items">
-                        <h4>Items:</h4>
-                        ${order.items.map(item => `
-                            <div>
-                                <img src="${item.image}" alt="${item.name}">
-                                <span>${item.name} - Qty: ${item.quantity} - ₵${item.price.toFixed(2)}</span>
-                            </div>
-                        `).join('')}
+      document.addEventListener("DOMContentLoaded", function() {
+    const orders = JSON.parse(localStorage.getItem("allOrders")) || [];
+    const myOrdersContainer = document.getElementById("myOrders");
+    const payLink = document.querySelector(".pay a");
+    const payOnPickupLink = document.querySelector(".payon a");
+
+    if (orders.length === 0) {
+        myOrdersContainer.innerHTML = "<p>No orders found.</p>";
+        return;
+    }
+
+    let hasPendingOrder = false;
+
+    orders.forEach(order => {
+        const orderDiv = document.createElement("div");
+        orderDiv.className = "order";
+        orderDiv.innerHTML = `
+            <h3>Order #${order.id}</h3>
+            <p><strong>Customer:</strong> ${order.customerName} (${order.customerEmail})</p>
+            <p><strong>Total:</strong> ₵${order.total.toFixed(2)}</p>
+            <p><strong>Status:</strong> <span class="status ${order.status.toLowerCase()}">${order.status}</span></p>
+            <div class="order-items">
+                <h4>Items:</h4>
+                ${order.items.map(item => `
+                    <div>
+                        <img src="${item.image}" alt="${item.name}">
+                        <span>${item.name} - Qty: ${item.quantity} - ₵${item.price.toFixed(2)}</span>
                     </div>
-                `;
-                myOrdersContainer.appendChild(orderDiv);
-            });
+                `).join('')}
+            </div>
+        `;
+        myOrdersContainer.appendChild(orderDiv);
+
+        if (order.status.toLowerCase() === "pending") {
+            hasPendingOrder = true;
+        }
+    });
+
+    if (hasPendingOrder) {
+        payLink.addEventListener("click", function(event) {
+            event.preventDefault();
+            alert("Your order is still pending. Please wait for approval before making payment.");
         });
+
+        payOnPickupLink.addEventListener("click", function(event) {
+            event.preventDefault();
+            alert("Your order is still pending. Please wait for approval before proceeding.");
+        });
+
+        payLink.style.pointerEvents = "none";
+        payOnPickupLink.style.pointerEvents = "none";
+        payLink.style.opacity = "0.5";
+        payOnPickupLink.style.opacity = "0.5";
+    }
+});
+
     </script>
 </body>
 </html>
