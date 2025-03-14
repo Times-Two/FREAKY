@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmation</title>
+    <link rel="stylesheet" href="congratulation.css">
+</head>
+<body>
+    <header>
+        <h1 class="logo">Hotel Booking</h1>
+    </header>
+
+    <section class="confirmation">
+        <h2>Booking Successful! 🎉</h2>
+        <p>Thank you for booking with us.</p>
+        <p>Your transaction reference: <strong id="transaction-ref"></strong></p>
+        <a href="indexin.html" class="btn">Back to Home</a>
+    </section>
+
+    <script>
+        // Retrieve transaction reference from URL
+        const urlParams = new URLSearchParams(window.location.search);
+        document.getElementById("transaction-ref").textContent = urlParams.get("ref") || "N/A";
+    </script>
+</body>
+</html>
